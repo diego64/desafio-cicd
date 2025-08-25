@@ -21,3 +21,25 @@ jobs:
       - name: Execução do comando build
         working-directory: ./src
         run: dotnet build Review-Filmes.sln
+
+  release:
+    name: Criação de Release
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Obtendo o código do projeto
+        uses: actions/checkout@v4
+      - name: Efetuando login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_PWD }}
+      - name: Build e Puh da Imagem Docker
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: ./src
+          file: src/Review-Filmes.Web/Dockerfile
+          tags: |
+            diego64/desafio-cicd:latest
+            diego64/desafio-cicd:v${{ github.run_number }}
