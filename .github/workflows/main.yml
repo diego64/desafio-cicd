@@ -21,11 +21,15 @@ jobs:
       - name: Execução do comando build
         working-directory: ./src
         run: dotnet build Review-Filmes.sln
+  
+  testes:
+    needs: [build]
+    uses: diego64/desafio-cicd/.github/workflows/testes.yml@main
 
   release:
     name: Criação de Release
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [testes]
     steps:
       - name: Obtendo o código do projeto
         uses: actions/checkout@v4
