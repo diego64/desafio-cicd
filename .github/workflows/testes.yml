@@ -26,7 +26,7 @@ jobs:
             ports: 
               - 5432:5432
             env:
-              PORTGRES_USER: review
+              POSTGRES_USER: review
               POSTGRES_PASSWORD: Passw0rd2023!
               POSTGRES_DB: review-filmes
         steps:
@@ -42,6 +42,6 @@ jobs:
               working-directory: ./src
               run: dotnet test ./Review-Filmes.Test.Integration/Review-Filmes.Test.Integration.csproj
               env:
-                ConnectionStrings__DefaultConnection: "Host=localhost;Database=review;Username=review;Password=Passw0rd2023!"
+                ConnectionStrings__DefaultConnection: "Host=localhost;Database=review-filmes;Username=review;Password=Passw0rd2023!"
 
               
