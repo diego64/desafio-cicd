@@ -1,0 +1,40 @@
+    sonarqube:
+      name: Scan com o Sonarqube
+      runs-on: ubuntu-latest
+      steps:
+        - name: Obtendo código do projeto
+          uses: actions/checkout@v4
+
+        - name: Setup JDK
+          uses: actions/setup-java@v4
+          with:
+            distribution: 'adopt'
+            java-version: '21'
+
+        - name: Setup dotnet
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: "8.0.300"
+
+        - name: Instalação do Sonarqube Scanner
+          run: dotnet tool install --global dotnet-sonarscanner
+
+        - name: Build e analise
+          working-directory: ./src
+          run: |
+            dotnet sonarscanner begin /k:"filme" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL}}"
+            dotnet build Review-Filmes.sln
+            dotnet sonarscaner end /d:sonar.login="${{ secrets.SONAR_TOKEN}}"
+
+        - name: Verificação do Quality Gate
+          uses: sonarsource/sonarqube-quality-gate-action@master
+          id: sonarqube-quality-gate-check
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          with:
+            scanMetadataReportFile: ./src/.sonarqube/out/.sonar/report-task.txt
+
+        - name: "Resultado status quality gate"
+          if: ${{ always() }}
+          run: echo "O resultado do quality gate é ${{ secrets.sonarqube-quality-gate-check}}"

@@ -25,6 +25,7 @@ jobs:
   testes:
     needs: [build]
     uses: diego64/desafio-cicd/.github/workflows/testes.yml@main
+    secrets: inherit
 
   release:
     name: Criação de Release
