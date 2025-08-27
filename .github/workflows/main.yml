@@ -104,7 +104,7 @@ jobs:
         run: dotnet test ./Review-Filmes.Test.EndToEnd/Review-Filmes.Test.EndToEnd.csproj
       
   deploy-producao:
-      needs: [deploy-homologacao]
+      needs: [teste-e2e]
       uses: diego64/desafio-cicd/.github/workflows/deploy.yml@main
       secrets: inherit
       with:
