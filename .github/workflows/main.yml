@@ -76,3 +76,37 @@ jobs:
         with:
           category: docker-result
           sarif_file: trivy-docker-result.sarif
+
+  deploy-homologacao:
+      needs: [release]
+      uses: diego64/desafio-cicd/.github/workflows/deploy.yml@main
+      secrets: inherit
+      with:
+        environment-name: homologacao
+        environment-url: http://homologacao.diego64.com
+
+  teste-e2e:
+    name: Teste End to End
+    runs-on: ubuntu-latest
+    needs: [deploy-homologacao]
+    environment: 
+      name: homologacao
+    container:
+      image: fabricioveronez/webdriver-dotnet:chrome
+      env:
+        BASE_URL: "http://${{ vars.BASE_URL }}"
+    steps:
+      - name: Obtendo o código do projeto
+        uses: actions/checkout@v4
+
+      - name: Execução do Teste End to End
+        working-directory: ./src
+        run: dotnet test ./Review-Filmes.Test.EndToEnd/Review-Filmes.Test.EndToEnd.csproj
+      
+  deploy-producao:
+      needs: [deploy-homologacao]
+      uses: diego64/desafio-cicd/.github/workflows/deploy.yml@main
+      secrets: inherit
+      with:
+        environment-name: producao
+        environment-url: http://producao.diego64.com
