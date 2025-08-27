@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="img.shields.io/image/cicd.png" width="400" alt="Capa" /></a>
+</p>
+
 ## 📝 Objetivo do Repositório
 
 Este repositório tem como objetivo principal implementar e manter um fluxo de CI/CD robusto e alinhado às boas práticas de engenharia de software, garantindo que o processo de desenvolvimento seja seguro, rastreável e eficiente até a entrega em produção.
